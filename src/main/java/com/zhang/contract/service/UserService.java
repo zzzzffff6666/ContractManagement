@@ -27,7 +27,7 @@ public class UserService {
         return userMapper.selectAll();
     }
 
-    public String selectUser(Object type) {
+    public User selectUser(Object type) {
         logger.info("开始查询数据");
         User user;
         if (type instanceof Integer) {
@@ -37,7 +37,7 @@ public class UserService {
             String name = (String)type;
             user = userMapper.selectUserByName(name);
         }
-        return user.toString();
+        return user;
     }
 
     public int insertUser(User params) {

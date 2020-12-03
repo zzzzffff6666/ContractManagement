@@ -21,7 +21,7 @@ public class RoleService {
         return roleMapper.selectAll();
     }
 
-    public String selectRole(Object type) {
+    public Role selectRole(Object type) {
         logger.info("开始查询数据");
         Role role;
         if (type instanceof Integer) {
@@ -31,7 +31,7 @@ public class RoleService {
             String name = (String)type;
             role = roleMapper.selectRoleByName(name);
         }
-        return role.toString();
+        return role;
     }
 
     public int insertRole(Role params) {

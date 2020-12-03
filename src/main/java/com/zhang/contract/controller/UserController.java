@@ -2,7 +2,9 @@ package com.zhang.contract.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhang.contract.entity.Function;
 import com.zhang.contract.entity.User;
+import com.zhang.contract.service.FunctionService;
 import com.zhang.contract.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,6 +26,22 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private FunctionService functionService;
+
+    @RequestMapping(value = {"login/name={name} password={password}"}, method = {RequestMethod.GET})
+    public List<Function> login(@PathVariable String name, @PathVariable String password) {
+        if (userService.Login(name, password)) {
+            User user = userService.selectUser(name);
+
+            //等待修改
+            List<Integer> idList = new ArrayList<>();
+            idList.add(1);
+            idList.add(3);
+            return functionService.selectFunctionByList(idList);
+        }
+        return null;
+    }
 
     @RequestMapping(value= {"selectAll"}, method={RequestMethod.GET})
     public List<User> selectAllUser() {
@@ -33,17 +52,17 @@ public class UserController {
     }
 
     @RequestMapping(value= {"selectByID/{id}"}, method={RequestMethod.GET})
-    public String selectUserByID(@PathVariable int id) {
+    public User selectUserByID(@PathVariable int id) {
         logger.info("查询数据ID为: " + id);
-        String result = userService.selectUser(id);
+        User result = userService.selectUser(id);
         logger.info("查询数据成功");
         return result;
     }
 
     @RequestMapping(value= {"selectByName/{name}"}, method={RequestMethod.GET})
-    public String selectUserByName(@PathVariable String name) {
+    public User selectUserByName(@PathVariable String name) {
         logger.info("查询数据name为: " + name);
-        String result = userService.selectUser(name);
+        User result = userService.selectUser(name);
         logger.info("查询数据成功");
         return result;
     }
@@ -57,7 +76,7 @@ public class UserController {
     }
 
     @RequestMapping(value= {"update"}, method={RequestMethod.POST})
-    public String updateUser(@RequestBody String params) throws IOException {
+    public int updateUser(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         logger.info("解析数据成功");
@@ -69,15 +88,14 @@ public class UserController {
         int result = userService.updateUser(user);
         if (result != 0) {
             logger.info("数据修改成功");
-            return "Commit Success";
         } else {
             logger.info("数据修改失败");
-            return "Commit Fail";
         }
+        return result;
     }
 
     @RequestMapping(value= {"insert"}, method={RequestMethod.POST})
-    public String insertUser(@RequestBody String params) throws IOException {
+    public int insertUser(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         logger.info("解析数据成功");
@@ -88,10 +106,9 @@ public class UserController {
         int result = userService.insertUser(user);
         if (result != 0) {
             logger.info("数据入库成功");
-            return "Commit Success";
         } else {
             logger.info("数据入库失败");
-            return "Commit Fail";
         }
+        return result;
     }
 }

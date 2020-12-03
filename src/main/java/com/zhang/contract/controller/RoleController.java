@@ -29,17 +29,17 @@ public class RoleController {
     }
 
     @RequestMapping(value= {"selectByID/{id}"}, method={RequestMethod.GET})
-    public String selectRoleByID(@PathVariable int id) {
+    public Role selectRoleByID(@PathVariable int id) {
         logger.info("查询数据ID为: " + id);
-        String result = roleService.selectRole(id);
+        Role result = roleService.selectRole(id);
         logger.info("查询数据成功");
         return result;
     }
 
     @RequestMapping(value= {"selectByName/{name}"}, method={RequestMethod.GET})
-    public String selectRoleByName(@PathVariable String name) {
+    public Role selectRoleByName(@PathVariable String name) {
         logger.info("查询数据name为: " + name);
-        String result = roleService.selectRole(name);
+        Role result = roleService.selectRole(name);
         logger.info("查询数据成功");
         return result;
     }

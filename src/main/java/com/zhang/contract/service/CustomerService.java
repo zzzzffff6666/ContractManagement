@@ -21,7 +21,7 @@ public class CustomerService {
         return customerMapper.selectAll();
     }
 
-    public String selectCustomer(Object type) {
+    public Customer selectCustomer(Object type) {
         logger.info("开始查询数据");
         Customer customer;
         if (type instanceof Integer) {
@@ -31,7 +31,7 @@ public class CustomerService {
             String name = (String)type;
             customer = customerMapper.selectCustomerByName(name);
         }
-        return customer.toString();
+        return customer;
     }
 
     public int insertCustomer(Customer params) {

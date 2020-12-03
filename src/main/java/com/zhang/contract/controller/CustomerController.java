@@ -29,17 +29,17 @@ public class CustomerController {
     }
 
     @RequestMapping(value= {"selectByID/{id}"}, method={RequestMethod.GET})
-    public String selectCustomerByID(@PathVariable int id) {
+    public Customer selectCustomerByID(@PathVariable int id) {
         logger.info("查询数据ID为: " + id);
-        String result = customerService.selectCustomer(id);
+        Customer result = customerService.selectCustomer(id);
         logger.info("查询数据成功");
         return result;
     }
 
     @RequestMapping(value= {"selectByName/{name}"}, method={RequestMethod.GET})
-    public String selectCustomerByName(@PathVariable String name) {
+    public Customer selectCustomerByName(@PathVariable String name) {
         logger.info("查询数据name为: " + name);
-        String result = customerService.selectCustomer(name);
+        Customer result = customerService.selectCustomer(name);
         logger.info("查询数据成功");
         return result;
     }

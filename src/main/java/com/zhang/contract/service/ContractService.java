@@ -24,7 +24,7 @@ public class ContractService {
         return contractMapper.selectAll();
     }
 
-    public String selectContract(Object type) {
+    public Contract selectContract(Object type) {
         logger.info("开始查询数据");
         Contract contract;
         if (type instanceof Integer) {
@@ -34,7 +34,7 @@ public class ContractService {
             String name = (String)type;
             contract = contractMapper.selectContractByName(name);
         }
-        return contract.toString();
+        return contract;
     }
 
     public int insertContract(Contract params) {

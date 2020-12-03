@@ -29,17 +29,17 @@ public class ContractController {
     }
 
     @RequestMapping(value= {"selectByID/{id}"}, method={RequestMethod.GET})
-    public String selectContractByID(@PathVariable int id) {
+    public Contract selectContractByID(@PathVariable int id) {
         logger.info("查询数据ID为: " + id);
-        String result = contractService.selectContract(id);
+        Contract result = contractService.selectContract(id);
         logger.info("查询数据成功");
         return result;
     }
 
     @RequestMapping(value= {"selectByName/{name}"}, method={RequestMethod.GET})
-    public String selectContractByName(@PathVariable String name) {
+    public Contract selectContractByName(@PathVariable String name) {
         logger.info("查询数据name为: " + name);
-        String result = contractService.selectContract(name);
+        Contract result = contractService.selectContract(name);
         logger.info("查询数据成功");
         return result;
     }
