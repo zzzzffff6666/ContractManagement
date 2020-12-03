@@ -5,6 +5,7 @@ import com.zhang.contract.entity.Contract;
 import java.util.List;
 
 public interface ContractMapper {
+
     public Contract selectContractByID(Integer id);
 
     public Contract selectContractByName(String name);

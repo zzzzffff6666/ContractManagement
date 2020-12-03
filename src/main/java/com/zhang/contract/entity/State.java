@@ -2,7 +2,7 @@ package com.zhang.contract.entity;
 
 import java.sql.Date;
 
-public class ContractState {
+public class State {
     private int con_id;
     private int type;
     private Date time;

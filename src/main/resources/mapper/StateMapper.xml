@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhang.contract.mapper.StateMapper">
+
+    <resultMap id="BaseResultMap" type="com.zhang.contract.entity.State">
+        <result column="con_id" jdbcType="INTEGER" property="con_id"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="time" jdbcType="DATE" property="time"/>
+    </resultMap>
+
+    <select id="selectState" resultType="com.zhang.contract.entity.State">
+        select *
+        from "CONTRACT_STATE"
+        where CON_ID = #{con_id}
+    </select>
+
+    <insert id="insertState" parameterType="com.zhang.contract.entity.State">
+        insert into "CONTRACT_STATE"
+            (CON_ID, TYPE, TIME)
+        VALUES (#{con_id}, #{type}, #{time})
+    </insert>
+
+    <update id="updateState" parameterType="com.zhang.contract.entity.State">
+        update "CONTRACT_STATE"
+        set TYPE = #{type},
+            TIME = #{time}
+        where CON_ID = #{con_id}
+    </update>
+
+    <delete id="deleteState">
+        delete
+        from "CONTRACT_STATE"
+        where CON_ID = #{con_id}
+    </delete>
+
+</mapper>

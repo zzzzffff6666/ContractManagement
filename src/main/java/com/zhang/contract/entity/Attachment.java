@@ -2,7 +2,7 @@ package com.zhang.contract.entity;
 
 import java.sql.Date;
 
-public class ContractAttachment {
+public class Attachment {
     private int con_id;
     private String file_name;
     private String path;
@@ -47,5 +47,9 @@ public class ContractAttachment {
 
     public void setUpload_time(Date upload_time) {
         this.upload_time = upload_time;
+    }
+
+    public String getFilePath() {
+        return path + file_name + "." + type;
     }
 }
