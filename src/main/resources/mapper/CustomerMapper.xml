@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhang.contract.mapper.CustomerMapper">
+
+    <resultMap id="BaseResultMap" type="com.zhang.contract.entity.Customer">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="tel" jdbcType="VARCHAR" property="tel" />
+        <result column="fax" jdbcType="VARCHAR" property="fax" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="bank" jdbcType="VARCHAR" property="bank" />
+        <result column="account" jdbcType="VARCHAR" property="account" />
+    </resultMap>
+
+    <select id="selectCustomerByID" resultType="com.zhang.contract.entity.Customer">
+        select
+        *
+        from
+        "CUSTOMER"
+        where
+        ID = #{id}
+    </select>
+
+    <select id="selectCustomerByName" resultType="com.zhang.contract.entity.Customer">
+        select
+        *
+        from
+        "CUSTOMER"
+        where
+        NAME = #{name}
+    </select>
+
+    <select id="selectAll" resultType="com.zhang.contract.entity.Customer">
+        select
+        *
+        from
+        "CUSTOMER"
+    </select>
+
+    <insert id="insertCustomer" parameterType="com.zhang.contract.entity.Customer" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        "CUSTOMER"
+        (NAME, ADDRESS, TEL, FAX, CODE, BANK, ACCOUNT)
+        values
+        (#{name},#{address},#{tel},#{fax},#{code},#{bank},#{account})
+    </insert>
+
+    <update id="updateCustomer" parameterType="com.zhang.contract.entity.Customer">
+        update
+        "CUSTOMER"
+        set
+        NAME = #{name}, ADDRESS = #{address}, TEL = #{tel}, FAX = #{fax},
+        CODE = #{code}, BANK = #{bank}, ACCOUNT = #{account}
+        where
+        ID = #{id}
+    </update>
+
+    <delete id="deleteCustomer" parameterType="java.lang.String">
+        delete from
+        "CUSTOMER"
+        where
+        NAME = #{name}
+    </delete>
+
+</mapper>

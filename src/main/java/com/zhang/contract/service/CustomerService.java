@@ -1,7 +1,7 @@
 package com.zhang.contract.service;
 
-import com.zhang.contract.entity.Role;
-import com.zhang.contract.mapper.RoleMapper;
+import com.zhang.contract.entity.Customer;
+import com.zhang.contract.mapper.CustomerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,33 +10,33 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class RoleService {
-    private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+public class CustomerService {
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     @Resource
-    private RoleMapper roleMapper;
+    private CustomerMapper customerMapper;
 
-    public List<Role> selectAll() {
+    public List<Customer> selectAll() {
         logger.info("开始查询数据");
-        return roleMapper.selectAll();
+        return customerMapper.selectAll();
     }
 
-    public String selectRole(Object type) {
+    public String selectCustomer(Object type) {
         logger.info("开始查询数据");
-        Role role;
+        Customer customer;
         if (type instanceof Integer) {
             int id = (int)type;
-            role = roleMapper.selectRoleByID(id);
+            customer = customerMapper.selectCustomerByID(id);
         } else {
             String name = (String)type;
-            role = roleMapper.selectRoleByName(name);
+            customer = customerMapper.selectCustomerByName(name);
         }
-        return role.toString();
+        return customer.toString();
     }
 
-    public int insertRole(Role params) {
+    public int insertCustomer(Customer params) {
         logger.info("开始提交数据");
-        int result = roleMapper.insertRole(params);
+        int result = customerMapper.insertCustomer(params);
         //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
         Integer insertId = params.getId();
         System.out.println("插入数据的ID: " + insertId);
@@ -48,19 +48,18 @@ public class RoleService {
         }
     }
 
-    public int deleteRole(String name) {
+    public int deleteCustomer(String name) {
         logger.info("开始删除数据");
-        int result = roleMapper.deleteRole(name);
+        int result = customerMapper.deleteCustomer(name);
         System.out.println("删除数据结果: " + result);
         // insert返回结果为 1，表示插入了一条数据
         return result;
     }
 
-    public int updateRole(Role params) {
+    public int updateCustomer(Customer params) {
         logger.info("开始修改数据");
-        int result = roleMapper.updateRole(params);
+        int result = customerMapper.updateCustomer(params);
         System.out.println("修改数据结果: " + result);
         return result;
     }
-
 }
