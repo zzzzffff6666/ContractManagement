@@ -4,59 +4,48 @@
 <mapper namespace="com.zhang.contract.mapper.RoleMapper">
 
     <resultMap id="BaseResultMap" type="com.zhang.contract.entity.Role">
-        <result column="id" jdbcType="INTEGER" property="id" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="description" jdbcType="VARCHAR" property="description" />
-        <result column="functions" jdbcType="VARCHAR" property="functions" />
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="functions" jdbcType="VARCHAR" property="functions"/>
     </resultMap>
 
     <select id="selectRoleByID" resultType="com.zhang.contract.entity.Role">
-        select
-        *
-        from
-        "ROLE_INFO"
-        where
-        ID = #{id}
+        select *
+        from "ROLE_INFO"
+        where ID = #{id}
     </select>
 
     <select id="selectRoleByName" resultType="com.zhang.contract.entity.Role">
-        select
-        *
-        from
-        "ROLE_INFO"
-        where
-        NAME = #{name}
+        select *
+        from "ROLE_INFO"
+        where NAME = #{name}
     </select>
 
     <select id="selectAll" resultType="com.zhang.contract.entity.Role">
-        select
-        *
-        from
-        "ROLE_INFO"
+        select *
+        from "ROLE_INFO"
     </select>
 
     <insert id="insertRole" parameterType="com.zhang.contract.entity.Role" useGeneratedKeys="true" keyProperty="id">
-        insert into
-        "ROLE_INFO"
-        (NAME, DESCRIPTION, FUNCTIONS)
-        values
-        (#{name},#{description},#{functions})
+        insert into "ROLE_INFO"
+            (NAME, DESCRIPTION, FUNCTIONS)
+        values (#{name}, #{description}, #{functions})
     </insert>
 
     <update id="updateRole" parameterType="com.zhang.contract.entity.Role">
         update
-        "ROLE_INFO"
-        set
-        NAME = #{name}, DESCRIPTION = #{description}, FUNCTIONS = #{functions}
-        where
-        ID = #{id}
+            "ROLE_INFO"
+        set NAME        = #{name},
+            DESCRIPTION = #{description},
+            FUNCTIONS   = #{functions}
+        where ID = #{id}
     </update>
 
     <delete id="deleteRole" parameterType="java.lang.String">
-        delete from
-        "ROLE_INFO"
-        where
-        NAME = #{name}
+        delete
+        from "ROLE_INFO"
+        where NAME = #{name}
     </delete>
 
 </mapper>

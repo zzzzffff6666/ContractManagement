@@ -4,19 +4,16 @@
 <mapper namespace="com.zhang.contract.mapper.FunctionMapper">
 
     <resultMap id="BaseResultMap" type="com.zhang.contract.entity.Function">
-        <result column="id" jdbcType="INTEGER" property="id" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="URL" jdbcType="VARCHAR" property="URL" />
-        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="URL" jdbcType="VARCHAR" property="URL"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
     </resultMap>
 
     <select id="selectFunctionByID" resultType="com.zhang.contract.entity.Function">
-        select
-        *
-        from
-        "FUNCTION_INFO"
-        where
-        ID = #{id}
+        select *
+        from "FUNCTION_INFO"
+        where ID = #{id}
     </select>
 
     <select id="selectFunctionByList" resultType="com.zhang.contract.entity.Function">
@@ -33,10 +30,8 @@
     </select>
 
     <select id="selectAll" resultType="com.zhang.contract.entity.Function">
-        select
-        *
-        from
-        "FUNCTION_INFO"
+        select *
+        from "FUNCTION_INFO"
     </select>
 
 </mapper>

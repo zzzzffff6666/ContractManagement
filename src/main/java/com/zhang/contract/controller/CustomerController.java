@@ -78,7 +78,7 @@ public class CustomerController {
     }
 
     @RequestMapping(value= {"insert"}, method={RequestMethod.POST})
-    public String insertCustomer(@RequestBody String params) throws IOException {
+    public int insertCustomer(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         logger.info("解析数据成功");
@@ -93,12 +93,11 @@ public class CustomerController {
         customer.setAccount(rootNode.path("account").asText());
         logger.info("数据转为实体bean成功");
         int result = customerService.insertCustomer(customer);
-        if (result != 0) {
+        if (result != -1) {
             logger.info("数据入库成功");
-            return "Commit Success";
         } else {
             logger.info("数据入库失败");
-            return "Commit Fail";
         }
+        return result;
     }
 }

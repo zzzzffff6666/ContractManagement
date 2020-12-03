@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhang.contract.mapper.RightMapper">
+
+    <resultMap id="BaseResultMap" type="com.zhang.contract.entity.Right">
+        <result column="user_name" jdbcType="VARCHAR" property="user_name"/>
+        <result column="role_name" jdbcType="VARCHAR" property="role_name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+    </resultMap>
+
+    <select id="selectRightByUserName" resultType="com.zhang.contract.entity.Right" parameterType="java.lang.String">
+        select *
+        from "RIGHT"
+        where USER_NAME = #{name}
+    </select>
+
+    <insert id="insertRight" parameterType="com.zhang.contract.entity.Right">
+        insert into "RIGHT"
+            (USER_NAME, ROLE_NAME, DESCRIPTION)
+        values (#{user_name}, #{role_name}, #{description})
+    </insert>
+
+    <delete id="deleteRight" parameterType="java.lang.String">
+        delete
+        from "RIGHT"
+        where USER_NAME = #{name}
+    </delete>
+</mapper>

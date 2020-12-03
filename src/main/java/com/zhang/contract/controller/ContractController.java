@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhang.contract.entity.Contract;
 import com.zhang.contract.service.ContractService;
+import com.zhang.contract.service.LogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class ContractController {
 
     @Autowired
     private ContractService contractService;
+
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(value= {"selectAll"}, method={RequestMethod.GET})
     public List<Contract> selectAllContract() {
@@ -61,8 +65,8 @@ public class ContractController {
         contract.setId(rootNode.path("id").asInt());
         contract.setName(rootNode.path("name").asText());
         contract.setCustomer_name(rootNode.path("customer_name").asText());
-        contract.setBegin_time(contractService.strToDate(rootNode.path("begin_time").asText()));
-        contract.setEnd_time(contractService.strToDate(rootNode.path("end_time").asText()));
+        contract.setBegin_time(logService.strToDate(rootNode.path("begin_time").asText()));
+        contract.setEnd_time(logService.strToDate(rootNode.path("end_time").asText()));
         contract.setContent(rootNode.path("content").asText());
         contract.setUser_name(rootNode.path("user_name").asText());
         logger.info("数据转为实体bean成功");
@@ -77,7 +81,7 @@ public class ContractController {
     }
 
     @RequestMapping(value= {"insert"}, method={RequestMethod.POST})
-    public String insertContract(@RequestBody String params) throws IOException {
+    public int insertContract(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         logger.info("解析数据成功");
@@ -85,18 +89,17 @@ public class ContractController {
         contract.setId(rootNode.path("id").asInt());
         contract.setName(rootNode.path("name").asText());
         contract.setCustomer_name(rootNode.path("customer_name").asText());
-        contract.setBegin_time(contractService.strToDate(rootNode.path("begin_time").asText()));
-        contract.setEnd_time(contractService.strToDate(rootNode.path("end_time").asText()));
+        contract.setBegin_time(logService.strToDate(rootNode.path("begin_time").asText()));
+        contract.setEnd_time(logService.strToDate(rootNode.path("end_time").asText()));
         contract.setContent(rootNode.path("content").asText());
         contract.setUser_name(rootNode.path("user_name").asText());
         logger.info("数据转为实体bean成功");
         int result = contractService.insertContract(contract);
-        if (result != 0) {
+        if (result != -1) {
             logger.info("数据入库成功");
-            return "Commit Success";
         } else {
             logger.info("数据入库失败");
-            return "Commit Fail";
         }
+        return result;
     }
 }

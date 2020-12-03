@@ -104,7 +104,7 @@ public class UserController {
         user.setPassword(rootNode.path("passWord").asText());
         logger.info("数据转为实体bean成功");
         int result = userService.insertUser(user);
-        if (result != 0) {
+        if (result != -1) {
             logger.info("数据入库成功");
         } else {
             logger.info("数据入库失败");

@@ -74,7 +74,7 @@ public class RoleController {
     }
 
     @RequestMapping(value= {"insert"}, method={RequestMethod.POST})
-    public String insertRole(@RequestBody String params) throws IOException {
+    public int insertRole(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         logger.info("解析数据成功");
@@ -85,12 +85,11 @@ public class RoleController {
         role.setFunctions(rootNode.path("functions").asText());
         logger.info("数据转为实体bean成功");
         int result = roleService.insertRole(role);
-        if (result != 0) {
+        if (result != -1) {
             logger.info("数据入库成功");
-            return "Commit Success";
         } else {
             logger.info("数据入库失败");
-            return "Commit Fail";
         }
+        return result;
     }
 }
