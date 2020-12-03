@@ -2,8 +2,8 @@ package com.zhang.contract.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhang.contract.entity.Customer;
-import com.zhang.contract.service.CustomerService;
+import com.zhang.contract.entity.Contract;
+import com.zhang.contract.service.ContractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,61 +13,60 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customer")
-public class CustomerController {
-    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+@RequestMapping("/contract")
+public class ContractController {
+    private static final Logger logger = LoggerFactory.getLogger(ContractController.class);
 
     @Autowired
-    private CustomerService customerService;
+    private ContractService contractService;
 
     @RequestMapping(value= {"selectAll"}, method={RequestMethod.GET})
-    public List<Customer> selectAllCustomer() {
+    public List<Contract> selectAllContract() {
         logger.info("查询数据所有记录: ");
-        List<Customer> result = customerService.selectAll();
+        List<Contract> result = contractService.selectAll();
         logger.info("查询数据成功");
         return result;
     }
 
     @RequestMapping(value= {"selectByID/{id}"}, method={RequestMethod.GET})
-    public String selectCustomerByID(@PathVariable int id) {
+    public String selectContractByID(@PathVariable int id) {
         logger.info("查询数据ID为: " + id);
-        String result = customerService.selectCustomer(id);
+        String result = contractService.selectContract(id);
         logger.info("查询数据成功");
         return result;
     }
 
     @RequestMapping(value= {"selectByName/{name}"}, method={RequestMethod.GET})
-    public String selectCustomerByName(@PathVariable String name) {
+    public String selectContractByName(@PathVariable String name) {
         logger.info("查询数据name为: " + name);
-        String result = customerService.selectCustomer(name);
+        String result = contractService.selectContract(name);
         logger.info("查询数据成功");
         return result;
     }
 
     @RequestMapping(value= {"delete/{name}"}, method={RequestMethod.GET})
-    public int deleteCustomer(@PathVariable String name) {
+    public int deleteContract(@PathVariable String name) {
         logger.info("删除数据name为: " + name);
-        int result = customerService.deleteCustomer(name);
+        int result = contractService.deleteContract(name);
         logger.info("删除数据成功");
         return result;
     }
 
     @RequestMapping(value= {"update"}, method={RequestMethod.POST})
-    public String updateCustomer(@RequestBody String params) throws IOException {
+    public String updateContract(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         logger.info("解析数据成功");
-        Customer customer = new Customer();
-        customer.setId(rootNode.path("id").asInt());
-        customer.setName(rootNode.path("name").asText());
-        customer.setAddress(rootNode.path("address").asText());
-        customer.setTel(rootNode.path("tel").asText());
-        customer.setFax(rootNode.path("fax").asText());
-        customer.setCode(rootNode.path("code").asText());
-        customer.setBank(rootNode.path("bank").asText());
-        customer.setAccount(rootNode.path("account").asText());
+        Contract contract = new Contract();
+        contract.setId(rootNode.path("id").asInt());
+        contract.setName(rootNode.path("name").asText());
+        contract.setCustomer_name(rootNode.path("customer_name").asText());
+        contract.setBegin_time(contractService.strToDate(rootNode.path("begin_time").asText()));
+        contract.setEnd_time(contractService.strToDate(rootNode.path("end_time").asText()));
+        contract.setContent(rootNode.path("content").asText());
+        contract.setUser_name(rootNode.path("user_name").asText());
         logger.info("数据转为实体bean成功");
-        int result = customerService.updateCustomer(customer);
+        int result = contractService.updateContract(contract);
         if (result != 0) {
             logger.info("数据修改成功");
             return "Commit Success";
@@ -78,21 +77,20 @@ public class CustomerController {
     }
 
     @RequestMapping(value= {"insert"}, method={RequestMethod.POST})
-    public String insertCustomer(@RequestBody String params) throws IOException {
+    public String insertContract(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         logger.info("解析数据成功");
-        Customer customer = new Customer();
-        customer.setId(rootNode.path("id").asInt());
-        customer.setName(rootNode.path("name").asText());
-        customer.setAddress(rootNode.path("address").asText());
-        customer.setTel(rootNode.path("tel").asText());
-        customer.setFax(rootNode.path("fax").asText());
-        customer.setCode(rootNode.path("code").asText());
-        customer.setBank(rootNode.path("bank").asText());
-        customer.setAccount(rootNode.path("account").asText());
+        Contract contract = new Contract();
+        contract.setId(rootNode.path("id").asInt());
+        contract.setName(rootNode.path("name").asText());
+        contract.setCustomer_name(rootNode.path("customer_name").asText());
+        contract.setBegin_time(contractService.strToDate(rootNode.path("begin_time").asText()));
+        contract.setEnd_time(contractService.strToDate(rootNode.path("end_time").asText()));
+        contract.setContent(rootNode.path("content").asText());
+        contract.setUser_name(rootNode.path("user_name").asText());
         logger.info("数据转为实体bean成功");
-        int result = customerService.insertCustomer(customer);
+        int result = contractService.insertContract(contract);
         if (result != 0) {
             logger.info("数据入库成功");
             return "Commit Success";

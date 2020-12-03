@@ -25,7 +25,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value= {"selectAll"}, method={RequestMethod.GET})
-    public List<User> selectUserByID() {
+    public List<User> selectAllUser() {
         logger.info("查询数据所有记录: ");
         List<User> result = userService.selectAll();
         logger.info("查询数据成功");

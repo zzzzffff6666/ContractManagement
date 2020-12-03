@@ -21,7 +21,7 @@ public class RoleController {
     private RoleService roleService;
 
     @RequestMapping(value= {"selectAll"}, method={RequestMethod.GET})
-    public List<Role> selectUserByID() {
+    public List<Role> selectAllRole() {
         logger.info("查询数据所有记录: ");
         List<Role> result = roleService.selectAll();
         logger.info("查询数据成功");
@@ -29,7 +29,7 @@ public class RoleController {
     }
 
     @RequestMapping(value= {"selectByID/{id}"}, method={RequestMethod.GET})
-    public String selectUserByID(@PathVariable int id) {
+    public String selectRoleByID(@PathVariable int id) {
         logger.info("查询数据ID为: " + id);
         String result = roleService.selectRole(id);
         logger.info("查询数据成功");
@@ -37,7 +37,7 @@ public class RoleController {
     }
 
     @RequestMapping(value= {"selectByName/{name}"}, method={RequestMethod.GET})
-    public String selectUserByName(@PathVariable String name) {
+    public String selectRoleByName(@PathVariable String name) {
         logger.info("查询数据name为: " + name);
         String result = roleService.selectRole(name);
         logger.info("查询数据成功");
@@ -45,7 +45,7 @@ public class RoleController {
     }
 
     @RequestMapping(value= {"delete/{name}"}, method={RequestMethod.GET})
-    public int deleteUser(@PathVariable String name) {
+    public int deleteRole(@PathVariable String name) {
         logger.info("删除数据name为: " + name);
         int result = roleService.deleteRole(name);
         logger.info("删除数据成功");

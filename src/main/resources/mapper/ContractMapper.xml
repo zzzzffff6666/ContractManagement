@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhang.contract.mapper.ContractMapper">
+
+    <resultMap id="BaseResultMap" type="com.zhang.contract.entity.Contract">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="customer_name" jdbcType="VARCHAR" property="customer_name" />
+        <result column="begin_time" jdbcType="DATE" property="begin_time" />
+        <result column="end_time" jdbcType="DATE" property="end_time" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="user_name" jdbcType="VARCHAR" property="user_name" />
+    </resultMap>
+
+    <select id="selectContractByID" resultType="com.zhang.contract.entity.Contract">
+        select
+        *
+        from
+        "CONTRACT"
+        where
+        ID = #{id}
+    </select>
+
+    <select id="selectContractByName" resultType="com.zhang.contract.entity.Contract">
+        select
+        *
+        from
+        "CONTRACT"
+        where
+        NAME = #{name}
+    </select>
+
+    <select id="selectAll" resultType="com.zhang.contract.entity.Contract">
+        select
+        *
+        from
+        "CONTRACT"
+    </select>
+
+    <insert id="insertContract" parameterType="com.zhang.contract.entity.Contract" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        "CONTRACT"
+        (NAME, CUSTOMER_NAME, BEGIN_TIME, END_TIME, CONTENT, USER_NAME)
+        values
+        (#{name},#{customer_name},#{begin_time},#{end_time},#{content},#{user_name})
+    </insert>
+
+    <update id="updateContract" parameterType="com.zhang.contract.entity.Contract">
+        update
+        "CONTRACT"
+        set
+        NAME = #{name}, CUSTOMER_NAME = #{customer_name}, BEGIN_TIME = #{begin_time},
+        END_TIME = #{end_time}, CONTENT = #{content}, USER_NAME = #{user_name}
+        where
+        ID = #{id}
+    </update>
+
+    <delete id="deleteContract" parameterType="java.lang.String">
+        delete from
+        "CONTRACT"
+        where
+        NAME = #{name}
+    </delete>
+
+</mapper>
