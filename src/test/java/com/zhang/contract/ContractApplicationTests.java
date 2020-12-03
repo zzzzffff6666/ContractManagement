@@ -9,6 +9,6 @@ class ContractApplicationTests {
     @Test
     void contextLoads() {
         System.out.println("ccc");
+        System.out.println("cs");
     }
-
 }
