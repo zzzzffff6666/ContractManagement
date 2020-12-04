@@ -31,7 +31,7 @@ public class UserController {
 
     @RequestMapping(value = {"login/name={name} password={password}"}, method = {RequestMethod.GET})
     public List<Function> login(@PathVariable String name, @PathVariable String password) {
-        if (userService.Login(name, password)) {
+        if (userService.login(name, password)) {
             User user = userService.selectUser(name);
 
             //等待修改
