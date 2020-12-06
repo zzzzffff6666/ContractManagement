@@ -1,18 +1,17 @@
 package com.zhang.contract.entity;
 
-import java.sql.Date;
-
 public class State {
-    private int con_id;
+    private String con_name;
+    //1 起草，2 会签完成，3 定稿完成，4 审批完成，5 签订完成
     private int type;
-    private Date time;
+    private String time;
 
-    public int getCon_id() {
-        return con_id;
+    public String getCon_name() {
+        return con_name;
     }
 
-    public void setCon_id(int con_id) {
-        this.con_id = con_id;
+    public void setCon_name(String con_name) {
+        this.con_name = con_name;
     }
 
     public int getType() {
@@ -23,11 +22,11 @@ public class State {
         this.type = type;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

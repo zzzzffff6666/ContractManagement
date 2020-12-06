@@ -13,8 +13,18 @@ public class ProcessService {
     @Resource
     private ProcessMapper processMapper;
 
-    public List<Processes> selectProcess(int con_id) {
-        return processMapper.selectProcess(con_id);
+    public boolean isProcessFinish(String con_name, int type) {
+        if (processMapper.selectForChange(con_name, type).size() == 0) {
+            return true;
+        } else return false;
+    }
+
+    public List<Processes> selectProcessByUserAndType(String user_name, int type) {
+        return processMapper.selectByUserType(user_name, type);
+    }
+
+    public List<Processes> selectProcess(String con_name) {
+        return processMapper.selectProcess(con_name);
     }
 
     public int insertProcess(Processes params) {
@@ -25,7 +35,9 @@ public class ProcessService {
         return processMapper.updateProcess(params);
     }
 
-    public int deleteProcess(int con_id) {
-        return processMapper.deleteProcess(con_id);
+    public int deleteProcess(String con_name) {
+        return processMapper.deleteProcess(con_name);
     }
+
+
 }

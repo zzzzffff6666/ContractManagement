@@ -12,8 +12,8 @@ public class AttachmentService {
     @Resource
     private AttachmentMapper attachmentMapper;
 
-    public Attachment selectAttachment(int con_id) {
-        return attachmentMapper.selectAttachment(con_id);
+    public Attachment selectAttachment(String con_name) {
+        return attachmentMapper.selectAttachment(con_name);
     }
 
     public int insertAttachment(Attachment params) {
@@ -24,7 +24,7 @@ public class AttachmentService {
         return attachmentMapper.updateAttachment(params);
     }
 
-    public int deleteAttachment(int con_id) {
-        return attachmentMapper.deleteAttachment(con_id);
+    public int deleteAttachment(String con_name) {
+        return attachmentMapper.deleteAttachment(con_name);
     }
 }

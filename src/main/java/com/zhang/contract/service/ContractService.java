@@ -13,6 +13,10 @@ public class ContractService {
     @Resource
     private ContractMapper contractMapper;
 
+    public List<Contract> selectByUser(String user_name) {
+        return contractMapper.selectContractByUser(user_name);
+    }
+
     public List<Contract> selectAll() {
         return contractMapper.selectAll();
     }

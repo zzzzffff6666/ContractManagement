@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ContractMapper {
 
+    public List<Contract> selectContractByUser(String user_name);
+
     public Contract selectContractByID(Integer id);
 
     public Contract selectContractByName(String name);

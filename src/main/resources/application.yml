@@ -26,3 +26,6 @@ spring:
 mybatis:
   mapperLocations: classpath:mapper/*.xml
   typeAliasesPackage: com.zhang.contract.entity
+
+server:
+  port: 8081

@@ -4,11 +4,11 @@ import com.zhang.contract.entity.Attachment;
 
 public interface AttachmentMapper {
 
-    public Attachment selectAttachment(int con_id);
+    public Attachment selectAttachment(String con_name);
 
     public int insertAttachment(Attachment params);
 
     public int updateAttachment(Attachment params);
 
-    public int deleteAttachment(int con_id);
+    public int deleteAttachment(String con_name);
 }

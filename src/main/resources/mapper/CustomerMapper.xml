@@ -31,11 +31,13 @@
         from "CUSTOMER"
     </select>
 
-    <insert id="insertCustomer" parameterType="com.zhang.contract.entity.Customer" useGeneratedKeys="true"
-            keyProperty="id">
+    <insert id="insertCustomer" parameterType="com.zhang.contract.entity.Customer">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            select nvl(max(id),0)+1 from "CUSTOMER"
+        </selectKey>
         insert into "CUSTOMER"
-            (NAME, ADDRESS, TEL, FAX, CODE, BANK, ACCOUNT)
-        values (#{name}, #{address}, #{tel}, #{fax}, #{code}, #{bank}, #{account})
+        (ID, NAME, ADDRESS, TEL, FAX, CODE, BANK, ACCOUNT)
+        values (#{id}, #{name}, #{address}, #{tel}, #{fax}, #{code}, #{bank}, #{account})
     </insert>
 
     <update id="updateCustomer" parameterType="com.zhang.contract.entity.Customer">

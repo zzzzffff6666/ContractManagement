@@ -1,11 +1,9 @@
 package com.zhang.contract.entity;
 
-import java.sql.Date;
-
 public class Log {
     private String user_name;
     private String content;
-    private Date time;
+    private String time;
 
     public String getUser_name() {
         return user_name;
@@ -23,11 +21,11 @@ public class Log {
         this.content = content;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

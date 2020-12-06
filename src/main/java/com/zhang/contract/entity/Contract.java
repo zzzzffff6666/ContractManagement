@@ -1,13 +1,11 @@
 package com.zhang.contract.entity;
 
-import java.sql.Date;
-
 public class Contract {
     private Integer id;
     private String name;
     private String customer_name;
-    private Date begin_time;
-    private Date end_time;
+    private String begin_time;
+    private String end_time;
     private String content;
     private String user_name;
 
@@ -48,19 +46,19 @@ public class Contract {
         this.customer_name = customer_name;
     }
 
-    public Date getBegin_time() {
+    public String getBegin_time() {
         return begin_time;
     }
 
-    public void setBegin_time(Date begin_time) {
+    public void setBegin_time(String begin_time) {
         this.begin_time = begin_time;
     }
 
-    public Date getEnd_time() {
+    public String getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(Date end_time) {
+    public void setEnd_time(String end_time) {
         this.end_time = end_time;
     }
 
@@ -79,4 +77,5 @@ public class Contract {
     public void setUser_name(String user_name) {
         this.user_name = user_name;
     }
+
 }

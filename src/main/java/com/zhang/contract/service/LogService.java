@@ -5,13 +5,11 @@ import com.zhang.contract.mapper.LogMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
 public class LogService {
-
     @Resource
     private LogMapper logMapper;
 
@@ -19,14 +17,7 @@ public class LogService {
         return logMapper.addLog(params);
     }
 
-    public Date strToDate(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-        Date date = null;
-        try {
-            date = new Date(format.parse(str).getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
+    public String currentDate() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     }
 }

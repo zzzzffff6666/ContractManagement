@@ -1,20 +1,18 @@
 package com.zhang.contract.entity;
 
-import java.sql.Date;
-
 public class Attachment {
-    private int con_id;
+    private String con_name;
     private String file_name;
     private String path;
     private String type;
-    private Date upload_time;
+    private String upload_time;
 
-    public int getCon_id() {
-        return con_id;
+    public String getCon_name() {
+        return con_name;
     }
 
-    public void setCon_id(int con_id) {
-        this.con_id = con_id;
+    public void setCon_name(String con_name) {
+        this.con_name = con_name;
     }
 
     public String getFile_name() {
@@ -41,11 +39,11 @@ public class Attachment {
         this.type = type;
     }
 
-    public Date getUpload_time() {
+    public String getUpload_time() {
         return upload_time;
     }
 
-    public void setUpload_time(Date upload_time) {
+    public void setUpload_time(String upload_time) {
         this.upload_time = upload_time;
     }
 

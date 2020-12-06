@@ -5,6 +5,7 @@ import com.zhang.contract.mapper.StateMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class StateService {
@@ -12,8 +13,12 @@ public class StateService {
     @Resource
     private StateMapper stateMapper;
 
-    public State selectState(int con_id) {
-        return stateMapper.selectState(con_id);
+    public List<State> selectByType(int type) {
+        return stateMapper.selectByType(type);
+    }
+
+    public State selectState(String con_name) {
+        return stateMapper.selectState(con_name);
     }
 
     public int insertState(State params) {
@@ -24,7 +29,7 @@ public class StateService {
         return stateMapper.updateState(params);
     }
 
-    public int deleteState(int con_id) {
-        return stateMapper.deleteState(con_id);
+    public int deleteState(String con_name) {
+        return stateMapper.deleteState(con_name);
     }
 }

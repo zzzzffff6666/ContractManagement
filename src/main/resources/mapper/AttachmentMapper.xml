@@ -4,23 +4,23 @@
 <mapper namespace="com.zhang.contract.mapper.AttachmentMapper">
 
     <resultMap id="BaseResultMap" type="com.zhang.contract.entity.Attachment">
-        <result column="con_id" jdbcType="INTEGER" property="con_id"/>
+        <result column="con_name" jdbcType="VARCHAR" property="con_name"/>
         <result column="file_name" jdbcType="VARCHAR" property="file_name"/>
         <result column="path" jdbcType="VARCHAR" property="path"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
-        <result column="begin_time" jdbcType="DATE" property="begin_time"/>
+        <result column="begin_time" jdbcType="VARCHAR" property="begin_time"/>
     </resultMap>
 
     <select id="selectAttachment" resultType="com.zhang.contract.entity.Attachment">
         select *
         from "CONTRACT_ATTACHMENT"
-        where CON_ID = #{con_id}
+        where CON_NAME = #{con_name}
     </select>
 
     <insert id="insertAttachment" parameterType="com.zhang.contract.entity.Attachment">
         insert into "CONTRACT_ATTACHMENT"
-            (CON_ID, FILE_NAME, PATH, TYPE, UPLOAD_TIME)
-        VALUES (#{con_id}, #{file_name}, #{path}, #{type}, #{upload_time})
+            (CON_NAME, FILE_NAME, PATH, TYPE, UPLOAD_TIME)
+        VALUES (#{con_name}, #{file_name}, #{path}, #{type}, #{upload_time})
     </insert>
 
     <update id="updateAttachment" parameterType="com.zhang.contract.entity.Attachment">
@@ -29,13 +29,13 @@
             PATH        = #{path},
             TYPE        = #{type},
             UPLOAD_TIME = #{upload_time}
-        where CON_ID = #{con_id}
+        where CON_NAME = #{con_name}
     </update>
 
     <delete id="deleteAttachment">
         delete
         from "CONTRACT_ATTACHMENT"
-        where CON_ID = #{con_id}
+        where CON_NAME = #{con_name}
     </delete>
 
 </mapper>

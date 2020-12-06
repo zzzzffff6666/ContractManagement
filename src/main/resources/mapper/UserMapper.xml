@@ -26,10 +26,13 @@
         from "USER_INFO"
     </select>
 
-    <insert id="insertUser" parameterType="com.zhang.contract.entity.User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertUser" parameterType="com.zhang.contract.entity.User">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            select nvl(max(id),0)+1 from "USER_INFO"
+        </selectKey>
         insert into "USER_INFO"
-            (NAME, PASSWORD)
-        values (#{name}, #{password})
+        (ID, NAME, PASSWORD)
+        values (#{id}, #{name}, #{password})
     </insert>
 
     <update id="updateUser" parameterType="com.zhang.contract.entity.User">

@@ -27,10 +27,13 @@
         from "ROLE_INFO"
     </select>
 
-    <insert id="insertRole" parameterType="com.zhang.contract.entity.Role" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertRole" parameterType="com.zhang.contract.entity.Role">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            select nvl(max(id),0)+1 from "ROLE_INFO"
+        </selectKey>
         insert into "ROLE_INFO"
-            (NAME, DESCRIPTION, FUNCTIONS)
-        values (#{name}, #{description}, #{functions})
+        (ID, NAME, DESCRIPTION, FUNCTIONS)
+        values (#{id}, #{name}, #{description}, #{functions})
     </insert>
 
     <update id="updateRole" parameterType="com.zhang.contract.entity.Role">

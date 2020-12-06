@@ -7,11 +7,17 @@
         <result column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="customer_name" jdbcType="VARCHAR" property="customer_name"/>
-        <result column="begin_time" jdbcType="DATE" property="begin_time"/>
-        <result column="end_time" jdbcType="DATE" property="end_time"/>
+        <result column="begin_time" jdbcType="VARCHAR" property="begin_time"/>
+        <result column="end_time" jdbcType="VARCHAR" property="end_time"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
         <result column="user_name" jdbcType="VARCHAR" property="user_name"/>
     </resultMap>
+
+    <select id="selectContractByUser" resultType="com.zhang.contract.entity.Contract">
+        select *
+        from "CONTRACT"
+        where USER_NAME = #{user_name}
+    </select>
 
     <select id="selectContractByID" resultType="com.zhang.contract.entity.Contract">
         select *
@@ -30,11 +36,13 @@
         from "CONTRACT"
     </select>
 
-    <insert id="insertContract" parameterType="com.zhang.contract.entity.Contract" useGeneratedKeys="true"
-            keyProperty="id">
+    <insert id="insertContract" parameterType="com.zhang.contract.entity.Contract">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            select nvl(max(id),0)+1 from "CONTRACT"
+        </selectKey>
         insert into "CONTRACT"
-            (NAME, CUSTOMER_NAME, BEGIN_TIME, END_TIME, CONTENT, USER_NAME)
-        values (#{name}, #{customer_name}, #{begin_time}, #{end_time}, #{content}, #{user_name})
+        (ID, NAME, CUSTOMER_NAME, BEGIN_TIME, END_TIME, CONTENT, USER_NAME)
+        values (#{id}, #{name}, #{customer_name}, #{begin_time}, #{end_time}, #{content}, #{user_name})
     </insert>
 
     <update id="updateContract" parameterType="com.zhang.contract.entity.Contract">

@@ -33,7 +33,7 @@ public class ConnectController {
     private RightService rightService;
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
-    public String login(@RequestBody String params) throws IOException {
+    public User login(@RequestBody String params) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String name = rootNode.path("name").asText();
@@ -53,11 +53,12 @@ public class ConnectController {
                 rList.addAll(roleService.selectRole(r.getRole_name()).getFunctionList());
             }
             List<Function> fList = functionService.selectFunctionByList(rList);
+            user.setFunctions(fList);
 
-            return "Login Success";
+            return user;
         } else {
             logger.info("登陆失败！");
-            return "Login Failure";
+            return null;
         }
     }
 
