@@ -43,14 +43,13 @@
     <update id="updateCustomer" parameterType="com.zhang.contract.entity.Customer">
         update
             "CUSTOMER"
-        set NAME    = #{name},
-            ADDRESS = #{address},
+        set ADDRESS = #{address},
             TEL     = #{tel},
             FAX     = #{fax},
             CODE    = #{code},
             BANK    = #{bank},
             ACCOUNT = #{account}
-        where ID = #{id}
+        where NAME = #{name}
     </update>
 
     <delete id="deleteCustomer" parameterType="java.lang.String">

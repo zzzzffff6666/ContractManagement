@@ -39,10 +39,9 @@
     <update id="updateRole" parameterType="com.zhang.contract.entity.Role">
         update
             "ROLE_INFO"
-        set NAME        = #{name},
-            DESCRIPTION = #{description},
+        set DESCRIPTION = #{description},
             FUNCTIONS   = #{functions}
-        where ID = #{id}
+        where NAME = #{name}
     </update>
 
     <delete id="deleteRole" parameterType="java.lang.String">

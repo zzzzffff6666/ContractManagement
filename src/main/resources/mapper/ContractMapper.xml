@@ -48,13 +48,12 @@
     <update id="updateContract" parameterType="com.zhang.contract.entity.Contract">
         update
             "CONTRACT"
-        set NAME          = #{name},
-            CUSTOMER_NAME = #{customer_name},
+        set CUSTOMER_NAME = #{customer_name},
             BEGIN_TIME    = #{begin_time},
             END_TIME      = #{end_time},
-            CONTENT       = #{content},
-            USER_NAME     = #{user_name}
-        where ID = #{id}
+            CONTENT       = #{content}
+        where NAME = #{name}
+          and USER_NAME = #{user_name}
     </update>
 
     <delete id="deleteContract" parameterType="java.lang.String">

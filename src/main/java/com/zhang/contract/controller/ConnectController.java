@@ -14,12 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/connect")
 public class ConnectController {
     private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
 
@@ -33,7 +34,7 @@ public class ConnectController {
     private RightService rightService;
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
-    public User login(@RequestBody String params) throws IOException {
+    public User login(@RequestBody String params, HttpSession session) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String name = rootNode.path("name").asText();
@@ -41,25 +42,22 @@ public class ConnectController {
 
         logger.info("用户登录：name={}, password={}", name, password);
 
-        if (userService.login(name, password)) {
+        User user = userService.selectUser(name);
 
-            logger.info("登陆成功！");
-
-            //登录成功之后的操作
-            User user = userService.selectUser(name);
-            List<Right> list = rightService.selectRight(name);
-            List<Integer> rList = new ArrayList<>();
-            for (Right r : list) {
-                rList.addAll(roleService.selectRole(r.getRole_name()).getFunctionList());
+        if (user != null) {
+            if (user.getPassword().equals(password)) {
+                logger.info("登陆成功！");
+                //将内容保存在Session中
+                session.setAttribute("login", user);
+            } else {
+                logger.info("登陆失败！密码错误！");
             }
-            List<Function> fList = functionService.selectFunctionByList(rList);
-            user.setFunctions(fList);
-
-            return user;
         } else {
-            logger.info("登陆失败！");
-            return null;
+            logger.info("登陆失败！未找到该用户！");
+            user = new User();
+            user.setId(-1);
         }
+        return user;
     }
 
     @RequestMapping(value = {"/register"}, method = RequestMethod.POST)
@@ -67,18 +65,18 @@ public class ConnectController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         User user = new User();
-        user.setName(rootNode.path("name").asText());
-        user.setPassword(rootNode.path("password").asText());
+        user.setName(rootNode.findValue("name").asText());
+        user.setPassword(rootNode.findValue("password").asText());
 
         logger.info("用户注册：name={}, password={}", user.getName(), user.getPassword());
 
         if (userService.insertUser(user) != -1) {
             //注册成功之后的操作
             logger.info("注册成功！");
-            return "Register Success";
+            return "Register success";
         } else {
             logger.info("注册失败！");
-            return "Register Failure";
+            return "Register failure";
         }
     }
 }

@@ -7,8 +7,6 @@ public class User {
     private String name;
     private String password;
 
-    private List<Function> functions;
-
     @Override
     public String toString() {
         return "User{" +
@@ -40,13 +38,5 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Function> getFunctions() {
-        return functions;
-    }
-
-    public void setFunctions(List<Function> functions) {
-        this.functions = functions;
     }
 }

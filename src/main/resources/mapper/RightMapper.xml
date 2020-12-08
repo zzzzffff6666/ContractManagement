@@ -9,8 +9,8 @@
         <result column="description" jdbcType="VARCHAR" property="description"/>
     </resultMap>
 
-    <select id="selectRightByUserName" resultType="com.zhang.contract.entity.Right" parameterType="java.lang.String">
-        select *
+    <select id="selectRightByUserName" parameterType="java.lang.String">
+        select ROLE_NAME
         from "RIGHT"
         where USER_NAME = #{name}
     </select>

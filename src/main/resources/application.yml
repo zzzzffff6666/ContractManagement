@@ -28,4 +28,4 @@ mybatis:
   typeAliasesPackage: com.zhang.contract.entity
 
 server:
-  port: 8081
+  port: 8080

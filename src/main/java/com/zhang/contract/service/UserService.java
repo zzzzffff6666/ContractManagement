@@ -12,12 +12,6 @@ public class UserService {
     @Resource
     public UserMapper userMapper;
 
-    public boolean login(String name, String password) {
-        User user = userMapper.selectUserByName(name);
-        if (user == null) return false;
-        return user.getPassword().equals(password);
-    }
-
     public List<User> selectAll() {
         return userMapper.selectAll();
     }
