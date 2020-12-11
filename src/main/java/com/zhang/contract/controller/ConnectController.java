@@ -2,39 +2,29 @@ package com.zhang.contract.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhang.contract.entity.Function;
-import com.zhang.contract.entity.Right;
 import com.zhang.contract.entity.User;
-import com.zhang.contract.service.FunctionService;
-import com.zhang.contract.service.RightService;
-import com.zhang.contract.service.RoleService;
 import com.zhang.contract.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class ConnectController {
     private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
 
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
-    private FunctionService functionService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private RightService rightService;
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
-    public User login(@RequestBody String params, HttpSession session) throws IOException {
+    public Map<String, Object> login(@RequestBody String params, HttpSession session) throws IOException {
+        Map<String, Object> result = new HashMap<>();
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String name = rootNode.path("name").asText();
@@ -47,17 +37,21 @@ public class ConnectController {
         if (user != null) {
             if (user.getPassword().equals(password)) {
                 logger.info("登陆成功！");
+
+                user.setFunctions(userService.getRight(name));
+
                 //将内容保存在Session中
                 session.setAttribute("login", user);
+                result.put("result", user);
             } else {
                 logger.info("登陆失败！密码错误！");
+                result.put("result", "Error password");
             }
         } else {
             logger.info("登陆失败！未找到该用户！");
-            user = new User();
-            user.setId(-1);
+            result.put("result", "Error name");
         }
-        return user;
+        return result;
     }
 
     @RequestMapping(value = {"/register"}, method = RequestMethod.POST)

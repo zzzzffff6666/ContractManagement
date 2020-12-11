@@ -7,6 +7,8 @@ public class User {
     private String name;
     private String password;
 
+    private List<Integer> functions;
+
     @Override
     public String toString() {
         return "User{" +
@@ -38,5 +40,17 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setFunctions(List<Integer> f) {
+        functions = f;
+    }
+
+    public boolean hasRight(int index) {
+        return functions.contains(index);
+    }
+
+    public List<Integer> getFunctions() {
+        return functions;
     }
 }

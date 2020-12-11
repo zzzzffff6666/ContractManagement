@@ -1,48 +1,46 @@
 package com.zhang.contract.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhang.contract.entity.*;
 import com.zhang.contract.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @RestController
 @RequestMapping("/manage")
 public class ManagerController {
     private static final Logger logger = LoggerFactory.getLogger(ManagerController.class);
 
-    @Autowired
+    @Resource
     private CustomerService customerService;
-    @Autowired
+    @Resource
     private RoleService roleService;
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private RightService rightService;
-    @Autowired
+    @Resource
     private LogService logService;
-    @Autowired
+    @Resource
     private ProcessService processService;
-    @Autowired
+    @Resource
     private FunctionService functionService;
 
     @PostMapping("/role/add")
-    public String createRole(@RequestBody String params) throws IOException {
+    public String createRole(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(13)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Role role = new Role();
         role.setName(rootNode.findValue("name").asText());
         role.setDescription(rootNode.findValue("description").asText());
@@ -58,11 +56,11 @@ public class ManagerController {
     }
 
     @PostMapping("/role/delete")
-    public String deleteRole(@RequestBody String params) throws IOException {
+    public String deleteRole(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(14)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String name = rootNode.findValue("name").asText();
 
         if (roleService.deleteRole(name) > 0) {
@@ -75,10 +73,11 @@ public class ManagerController {
     }
 
     @PostMapping("/role/modify")
-    public String modifyRole(@RequestBody String params) throws IOException {
+    public String modifyRole(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(16)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Role role = new Role();
         role.setName(rootNode.findValue("name").asText());
         role.setDescription(rootNode.findValue("description").asText());
@@ -94,11 +93,11 @@ public class ManagerController {
     }
 
     @PostMapping("/role/query")
-    public Role queryRole(@RequestBody String params) throws IOException {
+    public Role queryRole(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(15)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String name = rootNode.findValue("name").asText();
 
         Role role = roleService.selectRole(name);
@@ -113,16 +112,21 @@ public class ManagerController {
     }
 
     @PostMapping("/role/all")
-    public List<Role> getAllRole(@RequestBody String params) {
+    public Map<String, List> getAllRole(HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(15)) throw new Exception("Hasn't right");
+
         logger.info("查找所有角色");
-        return roleService.selectAll();
+        Map<String, List> result = new HashMap<>();
+        result.put("result", roleService.selectAll());
+        return result;
     }
 
     @PostMapping("/customer/add")
-    public String createCustomer(@RequestBody String params) throws IOException {
+    public String createCustomer(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(17)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Customer customer = new Customer();
         customer.setName(rootNode.findValue("name").asText());
         customer.setAddress(rootNode.findValue("address").asText());
@@ -142,11 +146,11 @@ public class ManagerController {
     }
 
     @PostMapping("/customer/delete")
-    public String deleteCustomer(@RequestBody String params) throws IOException {
+    public String deleteCustomer(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(18)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String name = rootNode.findValue("name").asText();
 
         if (customerService.deleteCustomer(name) > 0) {
@@ -159,10 +163,11 @@ public class ManagerController {
     }
 
     @PostMapping("/customer/modify")
-    public String modifyCustomer(@RequestBody String params) throws IOException {
+    public String modifyCustomer(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(20)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Customer customer = new Customer();
         customer.setName(rootNode.findValue("name").asText());
         customer.setAddress(rootNode.findValue("address").asText());
@@ -182,11 +187,11 @@ public class ManagerController {
     }
 
     @PostMapping("/customer/query")
-    public Customer queryCustomer(@RequestBody String params) throws IOException {
+    public Customer queryCustomer(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(19)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String name = rootNode.findValue("name").asText();
 
         Customer customer = customerService.selectCustomer(name);
@@ -201,16 +206,21 @@ public class ManagerController {
     }
 
     @PostMapping("/customer/all")
-    public List<Customer> getAllCustomer() {
+    public Map<String, List> getAllCustomer(HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(19)) throw new Exception("Hasn't right");
+
         logger.info("查找所有客户");
-        return customerService.selectAll();
+        Map<String, List> result = new HashMap<>();
+        result.put("result", customerService.selectAll());
+        return result;
     }
 
     @PostMapping("/user/add")
-    public String createUser(@RequestBody String params) throws IOException {
+    public String createUser(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(9)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         User user = new User();
         user.setName(rootNode.findValue("name").asText());
         user.setPassword(rootNode.findValue("password").asText());
@@ -225,11 +235,11 @@ public class ManagerController {
     }
 
     @PostMapping("/user/delete")
-    public String deleteUser(@RequestBody String params) throws IOException {
+    public String deleteUser(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(10)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String name = rootNode.findValue("name").asText();
 
         if (userService.deleteUser(name) > 0) {
@@ -242,10 +252,11 @@ public class ManagerController {
     }
 
     @PostMapping("/user/modify")
-    public String modifyUser(@RequestBody String params) throws IOException {
+    public String modifyUser(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(12)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         User user = new User();
         user.setName(rootNode.findValue("name").asText());
         user.setPassword(rootNode.findValue("password").asText());
@@ -260,11 +271,11 @@ public class ManagerController {
     }
 
     @PostMapping("/user/query")
-    public User queryUser(@RequestBody String params) throws IOException {
+    public User queryUser(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(11)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String name = rootNode.findValue("name").asText();
 
         User user = userService.selectUser(name);
@@ -279,17 +290,21 @@ public class ManagerController {
     }
 
     @PostMapping("/user/all")
-    public List<User> getAllUser() {
+    public Map<String, List> getAllUser(HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(11)) throw new Exception("Hasn't right");
+
         logger.info("查找所有用户");
-        return userService.selectAll();
+        Map<String, List> result = new HashMap<>();
+        result.put("result", userService.selectAll());
+        return result;
     }
 
     @PostMapping("/assign/role")
-    public String assignRole(@RequestBody String params) throws IOException {
+    public String assignRole(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(21)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String user_name = rootNode.findValue("user_name").asText();
         List<String> roles1 = new ArrayList<>();
         List<String> roles2 = new ArrayList<>();
@@ -320,11 +335,11 @@ public class ManagerController {
     }
 
     @PostMapping("/assign/countersign")
-    public String assignCountersign(@RequestBody String params) throws IOException {
+    public String assignCountersign(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(22)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String con_name = rootNode.findValue("con_name").asText();
         List<String> users1 = new ArrayList<>();
         List<String> users2 = new ArrayList<>();
@@ -356,11 +371,11 @@ public class ManagerController {
     }
 
     @PostMapping("/assign/audit")
-    public String assignAudit(@RequestBody String params) throws IOException {
+    public String assignAudit(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(23)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String con_name = rootNode.findValue("con_name").asText();
         List<String> users1 = new ArrayList<>();
         List<String> users2 = new ArrayList<>();
@@ -392,11 +407,11 @@ public class ManagerController {
     }
 
     @PostMapping("/assign/sign")
-    public String assignSign(@RequestBody String params) throws IOException {
+    public String assignSign(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(24)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String con_name = rootNode.findValue("con_name").asText();
         List<String> users1 = new ArrayList<>();
         List<String> users2 = new ArrayList<>();
@@ -428,11 +443,11 @@ public class ManagerController {
     }
 
     @PostMapping("/getRoleFunction")
-    public List<Function> getRoleFunction(@RequestBody String params) throws IOException {
+    public Map<String, List> getRoleFunction(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(15)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String role_name = rootNode.findValue("role_name").asText();
 
         Role role = roleService.selectRole(role_name);
@@ -441,15 +456,18 @@ public class ManagerController {
             return null;
         }
         List<Integer> functions = role.getFunctionList();
-        return functionService.selectFunctionByList(functions);
+
+        Map<String, List> result = new HashMap<>();
+        result.put("result", functionService.selectFunctionByList(functions));
+        return result;
     }
 
     @PostMapping("/getUserRole")
-    public List<Role> getUserRole(@RequestBody String params) throws IOException {
+    public Map<String, List> getUserRole(@RequestBody String params, HttpSession session) throws Exception {
+        if (!((User) session.getAttribute("login")).hasRight(11)) throw new Exception("Hasn't right");
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String name = rootNode.findValue("name").asText();
         List<String> rights = rightService.selectRight(name);
 
@@ -457,7 +475,9 @@ public class ManagerController {
         for (String role_name : rights) {
             roles.add(roleService.selectRole(role_name));
         }
-        return roles;
-    }
 
+        Map<String, List> result = new HashMap<>();
+        result.put("result", roles);
+        return result;
+    }
 }

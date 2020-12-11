@@ -6,46 +6,41 @@ import com.zhang.contract.entity.*;
 import com.zhang.contract.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/operate")
 public class OperatorController {
     private static final Logger logger = LoggerFactory.getLogger(OperatorController.class);
 
-    @Autowired
+    @Resource
     private ContractService contractService;
-    @Autowired
+    @Resource
     private AttachmentService attachmentService;
-    @Autowired
+    @Resource
     private StateService stateService;
-    @Autowired
+    @Resource
     private ProcessService processService;
-    @Autowired
+    @Resource
     private LogService logService;
 
     //起草合同
     @RequestMapping(value = "/draft", method = RequestMethod.POST)
-    public String draft(@RequestBody String params, HttpSession session) throws IOException {
+    public String draft(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(1)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Contract contract = new Contract();
         contract.setName(rootNode.findValue("name").asText());
         contract.setUser_name(u.getName());
         contract.setCustomer_name(rootNode.findValue("customer_name").asText());
         contract.setContent(rootNode.findValue("content").asText());
-
-        logger.info(contract.getContent() + "===" + contract.getUser_name());
         Iterator<JsonNode> date = rootNode.findValue("date").elements();
         contract.setBegin_time(date.next().toString());
         contract.setEnd_time(date.next().toString());
@@ -72,20 +67,23 @@ public class OperatorController {
 
     //获取当前用户的待会签列表
     @RequestMapping(value = "/getCountersign", method = RequestMethod.POST)
-    public List<Processes> getCounterSign(HttpSession session) {
+    public Map<String, List> getCounterSign(HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(5)) throw new Exception("Hasn't right");
 
-        return processService.selectProcessByUserAndType(u.getName(), 1);
+        Map<String, List> result = new HashMap<>();
+        result.put("result", processService.selectProcessByUserAndType(u.getName(), 1));
+        return result;
     }
 
     //会签
     @RequestMapping(value = "/countersign", method = RequestMethod.POST)
-    public String countSign(@RequestBody String params, HttpSession session) throws IOException {
+    public String countSign(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(5)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Processes process = new Processes();
         process.setCon_name(rootNode.findValue("name").asText());
         process.setUser_name(u.getName());
@@ -118,34 +116,37 @@ public class OperatorController {
 
     //获取当前用户的待定稿列表
     @RequestMapping(value = "/getFinalize", method = RequestMethod.POST)
-    public List<Contract> getFinalize(HttpSession session) {
+    public Map<String, List> getFinalize(HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(2)) throw new Exception("Hasn't right");
 
         List<Contract> cs = contractService.selectByUser(u.getName());
-        List<Contract> result = new ArrayList<>();
+        List<Contract> contracts = new ArrayList<>();
         for (Contract c : cs) {
-            if (stateService.selectState(c.getName()).getType() == 2) {
-                result.add(c);
+            State s = stateService.selectState(c.getName());
+            if (s != null && s.getType() == 2) {
+                contracts.add(c);
             }
         }
+
+        Map<String, List> result = new HashMap<>();
+        result.put("result", contracts);
         return result;
     }
 
     //定稿
     @RequestMapping(value = "/finalize", method = RequestMethod.POST)
-    public String finalize(@RequestBody String params, HttpSession session) throws IOException {
+    public String finalize(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(2)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Contract contract = new Contract();
         contract.setName(rootNode.findValue("name").asText());
         contract.setUser_name(u.getName());
         contract.setCustomer_name(rootNode.findValue("user_name").asText());
         contract.setContent(rootNode.findValue("content").asText());
-
-        logger.info(contract.getContent() + "===" + contract.getUser_name());
 
         Iterator<JsonNode> date = rootNode.findValue("date").elements();
         contract.setBegin_time(date.next().toString());
@@ -170,20 +171,23 @@ public class OperatorController {
     
     //获取当前用户的待审批列表
     @RequestMapping(value = "/getAudit", method = RequestMethod.POST)
-    public List<Processes> getApproval(HttpSession session) {
+    public Map<String, List> getApproval(HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(6)) throw new Exception("Hasn't right");
 
-        return processService.selectProcessByUserAndType(u.getName(), 2);
+        Map<String, List> result = new HashMap<>();
+        result.put("result", processService.selectProcessByUserAndType(u.getName(), 2));
+        return result;
     }
 
     //审批
     @RequestMapping(value = "/audit", method = RequestMethod.POST)
-    public String approval(@RequestBody String params, HttpSession session) throws IOException {
+    public String approval(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(6)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Processes process = new Processes();
         process.setCon_name(rootNode.findValue("name").asText());
         process.setUser_name(u.getName());
@@ -216,20 +220,23 @@ public class OperatorController {
 
     //获取当前用户的待签订列表
     @RequestMapping(value = "/getSign")
-    public List<Processes> getSign(HttpSession session) {
+    public Map<String, List> getSign(HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(7)) throw new Exception("Hasn't right");
 
-        return processService.selectProcessByUserAndType(u.getName(), 3);
+        Map<String, List> result = new HashMap<>();
+        result.put("result", processService.selectProcessByUserAndType(u.getName(), 3));
+        return result;
     }
 
     //签订
     @RequestMapping(value = "/sign", method = RequestMethod.POST)
-    public String sign(@RequestBody String params, HttpSession session) throws IOException {
+    public String sign(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(7)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
         Processes process = new Processes();
         process.setCon_name(rootNode.findValue("name").asText());
         process.setUser_name(u.getName());
@@ -262,56 +269,73 @@ public class OperatorController {
 
     //获取当前用户所有合同
     @RequestMapping(value = "/getUserContract", method = RequestMethod.POST)
-    public List<Contract> getUserAllContract(HttpSession session) {
+    public Map<String, List> getUserAllContract(HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(1)) throw new Exception("Hasn't right");
 
         List<Contract> cs = contractService.selectByUser(u.getName());
-        return cs;
+        Map<String, List> result = new HashMap<>();
+        result.put("result", cs);
+        return result;
     }
 
     //获取所有合同
     @RequestMapping(value = "/all", method = RequestMethod.POST)
-    public List<Contract> getAllContract(HttpSession session) {
+    public Map<String, List> getAllContract(HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(3)) throw new Exception("Hasn't right");
 
-        return contractService.selectAll();
+        Map<String, List> result = new HashMap<>();
+        result.put("result", contractService.selectAll());
+        return result;
+    }
+
+    //获取合同信息
+    @PostMapping(value = "/getContract")
+    public Contract getContract(@RequestBody String params, HttpSession session) throws Exception{
+        User u = (User)session.getAttribute("login");
+        if (!u.hasRight(3)) throw new Exception("Hasn't right");
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(params);
+        String con_name = rootNode.findValue("name").asText();
+        return contractService.selectContract(con_name);
     }
 
     //获取合同的状态
     @RequestMapping(value = "/getState", method = RequestMethod.POST)
-    public State getContractState(@RequestBody String params, HttpSession session) throws IOException {
+    public State getContractState(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(8)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String con_name = rootNode.findValue("name").asText();
         return stateService.selectState(con_name);
     }
 
     //获取合同的操作过程
     @RequestMapping(value = "/getProcess", method = RequestMethod.POST)
-    public List<Processes> getContractProcess(@RequestBody String params, HttpSession session) throws IOException {
+    public Map<String, List> getContractProcess(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(8)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String con_name = rootNode.findValue("name").asText();
-        return processService.selectProcess(con_name);
+        Map<String, List> result = new HashMap<>();
+        result.put("result", processService.selectProcess(con_name));
+        return result;
     }
 
     //删除一个合同
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deleteContract(@RequestBody String params, HttpSession session) throws IOException {
+    public String deleteContract(@RequestBody String params, HttpSession session) throws Exception {
         User u = (User)session.getAttribute("login");
+        if (!u.hasRight(4)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        logger.info("解析数据成功");
-
         String con_name = rootNode.findValue("name").asText();
         processService.deleteProcess(con_name);
         if (stateService.deleteState(con_name) <= 0) return "Delete failure";
