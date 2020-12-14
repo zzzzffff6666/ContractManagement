@@ -51,11 +51,13 @@ public class Role {
     }
 
     public List<Integer> getFunctionList() {
-        String[] fs = functions.split(" ");
-        List<Integer> nums = new ArrayList<Integer>();
-        for (String f : fs) {
-            nums.add(Integer.parseInt(f));
-        }
-        return nums;
+        if (functions != null) {
+            String[] fs = functions.split("\\s+");
+            List<Integer> nums = new ArrayList<Integer>();
+            for (String f : fs) {
+                nums.add(Integer.parseInt(f));
+            }
+            return nums;
+        } else return null;
     }
 }

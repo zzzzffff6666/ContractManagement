@@ -39,8 +39,7 @@
     <update id="updateRole" parameterType="com.zhang.contract.entity.Role">
         update
             "ROLE_INFO"
-        set DESCRIPTION = #{description},
-            FUNCTIONS   = #{functions}
+        set DESCRIPTION = #{description}
         where NAME = #{name}
     </update>
 

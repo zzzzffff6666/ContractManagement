@@ -13,7 +13,11 @@ public class RightService {
     @Resource
     private RightMapper rightMapper;
 
-    public List<String> selectRight(String name) {
+    public List<String> selectRightByRole(String name) {
+        return rightMapper.selectRightByRoleName(name);
+    }
+
+    public List<String> selectRightByUser(String name) {
         return rightMapper.selectRightByUserName(name);
     }
 

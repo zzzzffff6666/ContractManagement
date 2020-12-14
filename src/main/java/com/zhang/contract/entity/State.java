@@ -2,7 +2,7 @@ package com.zhang.contract.entity;
 
 public class State {
     private String con_name;
-    //1 起草，2 会签完成，3 定稿完成，4 审批完成，5 签订完成
+    //0 起草，1 分配完成，2 会签完成，3 定稿完成，4 审批完成，5 签订完成
     private int type;
     private String time;
 

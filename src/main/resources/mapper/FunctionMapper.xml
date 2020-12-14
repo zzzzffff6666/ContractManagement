@@ -10,6 +10,12 @@
         <result column="description" jdbcType="VARCHAR" property="description"/>
     </resultMap>
 
+    <select id="selectFunctionByName" resultType="com.zhang.contract.entity.Function">
+        select *
+        from "FUNCTION_INFO"
+        where NAME = #{name}
+    </select>
+
     <select id="selectFunctionByID" resultType="com.zhang.contract.entity.Function">
         select *
         from "FUNCTION_INFO"

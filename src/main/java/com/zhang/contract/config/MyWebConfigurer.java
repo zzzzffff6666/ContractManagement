@@ -23,12 +23,10 @@ public class MyWebConfigurer implements WebMvcConfigurer {
                 "/img/**",        //忽略掉img请求，这里放的是页面需要使用到的固定的图片，像什么error.png,loading.gif之类的
                 "/css/**",        //忽略掉css请求
                 "/fonts/**",
-                "/login",
                 "/favicon.ico",
                 "/",
-                "/index.html",
-                "/index",
                 "/register",
+                "/index",
                 "/login");
     }
 

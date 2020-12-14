@@ -30,10 +30,11 @@ public class RoleService {
     }
 
     public int insertRole(Role params) {
-        //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
-        if (roleMapper.insertRole(params) == 1) {
+        try {
+            //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
+            roleMapper.insertRole(params);
             return params.getId();
-        } else {
+        } catch (Exception e) {
             return -1;
         }
     }

@@ -34,10 +34,11 @@ public class UserService {
     }
 
     public int insertUser(User params) {
-        //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
-        if (userMapper.insertUser(params) == 1) {
+        try {
+            //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
+            userMapper.insertUser(params);
             return params.getId();
-        } else {
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -51,7 +52,7 @@ public class UserService {
     }
 
     public List<Integer> getRight(String name) {
-        List<String> roles = rightService.selectRight(name);
+        List<String> roles = rightService.selectRightByUser(name);
         List<Integer> fun = new ArrayList<>();
         for (String r : roles) {
             fun.addAll(roleService.selectRole(r).getFunctionList());

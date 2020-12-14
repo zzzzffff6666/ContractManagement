@@ -47,6 +47,7 @@ public class User {
     }
 
     public boolean hasRight(int index) {
+        if (functions == null) return false;
         return functions.contains(index);
     }
 

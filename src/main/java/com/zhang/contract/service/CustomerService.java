@@ -30,10 +30,11 @@ public class CustomerService {
     }
 
     public int insertCustomer(Customer params) {
-        //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
-        if (customerMapper.insertCustomer(params) == 1) {
+        try {
+            //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
+            customerMapper.insertCustomer(params);
             return params.getId();
-        } else {
+        } catch (Exception e) {
             return -1;
         }
     }

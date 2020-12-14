@@ -50,7 +50,7 @@ public class OperatorController {
             //插入state表
             State s = new State();
             s.setCon_name(contract.getName());
-            s.setType(1);
+            s.setType(0);
             s.setTime(logService.currentDate());
             stateService.insertState(s);
 
@@ -340,6 +340,13 @@ public class OperatorController {
         processService.deleteProcess(con_name);
         if (stateService.deleteState(con_name) <= 0) return "Delete failure";
         if (contractService.deleteContract(con_name) <= 0) return "Delete failure";
+
+        Log log = new Log();
+        log.setUser_name(u.getName());
+        log.setContent(u.getName() + "删除了一个合同：" + con_name);
+        log.setTime(logService.currentDate());
+        logService.log(log);
+
         return "Delete success";
     }
 }

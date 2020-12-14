@@ -34,10 +34,11 @@ public class ContractService {
     }
 
     public int insertContract(Contract params) {
-        //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
-        if (contractMapper.insertContract(params) == 1) {
+        try {
+            //能获取插入的id是因为UserMapper.xml的insert语句新增了useGeneratedKeys和keyProperty参数
+            contractMapper.insertContract(params);
             return params.getId();
-        } else {
+        } catch (Exception e) {
             return -1;
         }
     }

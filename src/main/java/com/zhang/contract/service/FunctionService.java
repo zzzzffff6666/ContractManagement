@@ -17,8 +17,14 @@ public class FunctionService {
         return functionMapper.selectAll();
     }
 
-    public Function selectFunctionByID(Integer id) {
-        return functionMapper.selectFunctionByID(id);
+    public Function selectFunction(Object params) {
+        if (params instanceof Integer) {
+            int id = (int) params;
+            return functionMapper.selectFunctionByID(id);
+        } else {
+            String name = (String) params;
+            return functionMapper.selectFunctionByName(name);
+        }
     }
 
     public List<Function> selectFunctionByList(List<Integer> idList) {

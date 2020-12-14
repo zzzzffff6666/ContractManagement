@@ -3,6 +3,17 @@
 
 <mapper namespace="com.zhang.contract.mapper.LogMapper">
 
+    <resultMap id="BaseResultMap" type="com.zhang.contract.entity.Log">
+        <result column="user_name" jdbcType="VARCHAR" property="user_name"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="time" jdbcType="VARCHAR" property="time"/>
+    </resultMap>
+
+    <select id="getAllLog" resultType="com.zhang.contract.entity.Log">
+        select *
+        from "LOG"
+    </select>
+
     <insert id="addLog" parameterType="com.zhang.contract.entity.Log">
         insert into "LOG"
             (USER_NAME, CONTENT, TIME)
