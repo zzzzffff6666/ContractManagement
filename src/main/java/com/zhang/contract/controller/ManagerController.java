@@ -47,7 +47,7 @@ public class ManagerController {
         Role role = new Role();
         role.setName(rootNode.findValue("name").asText());
         role.setDescription(rootNode.findValue("description").asText());
-        Iterator<JsonNode> f = rootNode.findParent("functions").elements();
+        Iterator<JsonNode> f = rootNode.findValue("functions").elements();
         String fun = "";
         while (f.hasNext()) {
             Function function = functionService.selectFunction(f.next().asText());
@@ -61,7 +61,7 @@ public class ManagerController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "添加了一个角色：" + role.getName());
+            log.setContent(u.getName() + " 添加了一个角色：" + role.getName());
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -86,7 +86,7 @@ public class ManagerController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "删除了一个角色：" + name);
+            log.setContent(u.getName() + " 删除了一个角色：" + name);
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -108,13 +108,19 @@ public class ManagerController {
         Role role = new Role();
         role.setName(rootNode.findValue("name").asText());
         role.setDescription(rootNode.findValue("description").asText());
-        //role.setFunctions(rootNode.findValue("functions").asText());
+        Iterator<JsonNode> it = rootNode.findValue("functions").elements();
+        StringBuilder functions = new StringBuilder();
+        while(it.hasNext()) {
+            functions.append(it.next().asText()).append(" ");
+        }
+        role.setFunctions(functions.toString());
+        System.out.println(role.getFunctions());
 
         if (roleService.updateRole(role) > 0) {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "修改了一个角色：" + role.getName());
+            log.setContent(u.getName() + " 修改了一个角色：" + role.getName());
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -177,7 +183,7 @@ public class ManagerController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "添加了一个客户：" + customer.getName());
+            log.setContent(u.getName() + " 添加了一个客户：" + customer.getName());
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -202,7 +208,7 @@ public class ManagerController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "删除了一个客户：" + name);
+            log.setContent(u.getName() + " 删除了一个客户：" + name);
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -234,7 +240,7 @@ public class ManagerController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "修改了一个客户：" + customer.getName());
+            log.setContent(u.getName() + " 修改了一个客户：" + customer.getName());
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -286,12 +292,10 @@ public class ManagerController {
         user.setName(rootNode.findValue("name").asText());
         user.setPassword(rootNode.findValue("password").asText());
 
-
-
         if (userService.insertUser(user) != -1) {
             List<String> roles = new ArrayList<>();
             //Array 数组版
-            Iterator<JsonNode> ij = rootNode.findParent("roles").elements();
+            Iterator<JsonNode> ij = rootNode.findValue("roles").elements();
             if (ij != null) {
                 while (ij.hasNext()) {
                     roles.add(ij.next().asText());
@@ -310,7 +314,7 @@ public class ManagerController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "添加了一个用户：" + user.getName());
+            log.setContent(u.getName() + " 添加了一个用户：" + user.getName());
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -332,10 +336,9 @@ public class ManagerController {
         String name = rootNode.findValue("name").asText();
 
         if (userService.deleteUser(name) > 0) {
-
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "删除了一个用户：" + name);
+            log.setContent(u.getName() + " 删除了一个用户：" + name);
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -359,10 +362,9 @@ public class ManagerController {
         user.setPassword(rootNode.findValue("password").asText());
 
         if (userService.updateUser(user) > 0) {
-
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent(u.getName() + "修改了一个用户：" + user.getName());
+            log.setContent(u.getName() + " 修改了一个用户：" + user.getName());
             log.setTime(logService.currentDate());
             logService.log(log);
 
@@ -410,12 +412,12 @@ public class ManagerController {
     }
 
     @PostMapping("/getRoleFunction")
-    public Map<String, List> getRoleFunction(@RequestBody String params, HttpSession session) throws Exception {
+    public Map<String, Object> getRoleFunction(@RequestBody String params, HttpSession session) throws Exception {
         if (!((User) session.getAttribute("login")).hasRight(15)) throw new Exception("Hasn't right");
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
-        String role_name = rootNode.findValue("role_name").asText();
+        String role_name = rootNode.findValue("name").asText();
 
         Role role = roleService.selectRole(role_name);
         if (role == null) {
@@ -424,7 +426,9 @@ public class ManagerController {
         }
         List<Integer> functions = role.getFunctionList();
 
-        Map<String, List> result = new HashMap<>();
+        logger.info("查询角色的所有权限");
+        Map<String, Object> result = new HashMap<>();
+        result.put("description", role.getDescription());
         result.put("result", functionService.selectFunctionByList(functions));
         return result;
     }
@@ -443,6 +447,7 @@ public class ManagerController {
             roles.add(roleService.selectRole(role_name));
         }
 
+        logger.info("查询用户的所有角色");
         Map<String, List> result = new HashMap<>();
         result.put("result", roles);
         return result;
@@ -456,23 +461,16 @@ public class ManagerController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String user_name = rootNode.findValue("user_name").asText();
-        /*List<String> roles1 = new ArrayList<>();
 
-        //List 链表版
-        List<JsonNode> lj = rootNode.findParents("roles");
-        for (JsonNode jn : lj) {
-            roles1.add(jn.asText());
-        }*/
-
-        List<String> roles2 = new ArrayList<>();
+        List<String> roles = new ArrayList<>();
         //Array 数组版
         Iterator<JsonNode> ij = rootNode.findValue("roles").elements();
         while (ij.hasNext()) {
-            roles2.add(ij.next().asText());
+            roles.add(ij.next().asText());
         }
 
         List<Right> rights = new ArrayList<>();
-        for (String role : roles2) {
+        for (String role : roles) {
             Right right = new Right();
             right.setUser_name(user_name);
             right.setRole_name(role);
@@ -483,11 +481,12 @@ public class ManagerController {
 
         Log log = new Log();
         log.setUser_name(u.getName());
-        log.setContent(u.getName() + "为用户配置了权限：" + user_name);
+        log.setContent(u.getName() + " 为用户配置了权限：" + user_name);
         log.setTime(logService.currentDate());
         logService.log(log);
 
-        return "权限配置成功";
+        logger.info("分配角色成功");
+        return "Assign success";
     }
 
     @PostMapping("/assign/user")
@@ -498,15 +497,12 @@ public class ManagerController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String con_name = rootNode.findValue("con_name").asText();
-
         for (int i = 1; i <= 3; i++) {
             List<String> users = new ArrayList<>();
             //Array 数组版
-            Iterator<JsonNode> list = rootNode.findValue("value" + i).elements();
-            while (list.hasNext()) {
-                users.add(list.next().asText());
+            for (JsonNode jsonNode : rootNode.findValue("value" + i)) {
+                users.add(jsonNode.asText());
             }
-
             for (String user : users) {
                 Processes process = new Processes();
                 process.setCon_name(con_name);
@@ -519,13 +515,19 @@ public class ManagerController {
             }
         }
 
+        State s = new State();
+        s.setTime(logService.currentDate());
+        s.setCon_name(con_name);
+        s.setType(1);
+        stateService.updateState(s);
+
         Log log = new Log();
         log.setUser_name(u.getName());
-        log.setContent(u.getName() + "为合同分配了操作人员：" + con_name);
+        log.setContent(u.getName() + " 为 " + con_name + " 合同分配了操作人员");
         log.setTime(logService.currentDate());
         logService.log(log);
 
-        logger.info("分配成功");
+        logger.info("分配操作员成功");
         return "Assign success";
     }
 
@@ -543,9 +545,9 @@ public class ManagerController {
             if (r.getFunctionList().contains(6)) audit.add(r.getName());
             if (r.getFunctionList().contains(7)) sign.add(r.getName());
         }
-        List<String> result1 = new ArrayList<>();
-        List<String> result2 = new ArrayList<>();
-        List<String> result3 = new ArrayList<>();
+        Set<String> result1 = new LinkedHashSet<>();
+        Set<String> result2 = new LinkedHashSet<>();
+        Set<String> result3 = new LinkedHashSet<>();
         for (String n : countersign) {
             result1.addAll(rightService.selectRightByRole(n));
         }
@@ -555,6 +557,7 @@ public class ManagerController {
         for (String n : sign) {
             result3.addAll(rightService.selectRightByRole(n));
         }
+
         List<User> r1 = new ArrayList<>();
         List<User> r2 = new ArrayList<>();
         List<User> r3 = new ArrayList<>();
@@ -568,6 +571,7 @@ public class ManagerController {
             r3.add(userService.selectUser(n));
         }
 
+        logger.info("查询有权限操作合同的用户");
         Map<String, List> result = new HashMap<>();
         result.put("result1", r1);
         result.put("result2", r2);
@@ -580,6 +584,7 @@ public class ManagerController {
         User u = (User) session.getAttribute("login");
         if (!u.hasRight(22)) throw new Exception("Hasn't right");
 
+        logger.info("查询待分配合同");
         Map<String, List> result = new HashMap<>();
         result.put("result", stateService.selectByType(0));
         return result;

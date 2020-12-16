@@ -46,7 +46,6 @@ public class OperatorController {
         contract.setEnd_time(date.next().toString());
 
         if (contractService.insertContract(contract) != -1) {
-            logger.info("新建合同成功");
             //插入state表
             State s = new State();
             s.setCon_name(contract.getName());
@@ -56,12 +55,14 @@ public class OperatorController {
 
             Log log = new Log();
             log.setUser_name(contract.getUser_name());
-            log.setContent("起草了一个合同：" + contract.getName());
+            log.setContent(u.getName() + " 起草了一个合同：" + contract.getName());
             log.setTime(s.getTime());
             logService.log(log);
 
+            logger.info("新建合同成功");
             return "Draft success";
         }
+        logger.info("新建合同失败");
         return "Draft failure";
     }
 
@@ -71,6 +72,7 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(5)) throw new Exception("Hasn't right");
 
+        logger.info("查询待会签列表");
         Map<String, List> result = new HashMap<>();
         result.put("result", processService.selectProcessByUserAndType(u.getName(), 1));
         return result;
@@ -93,7 +95,6 @@ public class OperatorController {
         process.setTime(logService.currentDate());
 
         if (processService.updateProcess(process) == 1) {
-            logger.info("会签合同成功");
             if (processService.isProcessFinish(process.getCon_name(), process.getType())) {
                 State s = new State();
                 s.setCon_name(process.getCon_name());
@@ -104,12 +105,14 @@ public class OperatorController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent("会签了一个合同：" + process.getCon_name());
+            log.setContent(u.getName() + " 会签了一个合同：" + process.getCon_name());
             log.setTime(logService.currentDate());
             logService.log(log);
 
+            logger.info("会签合同成功");
             return "Counter sign success";
         } else {
+            logger.info("会签合同失败");
             return "Counter sign failure";
         }
     }
@@ -129,6 +132,7 @@ public class OperatorController {
             }
         }
 
+        logger.info("获取待定稿列表");
         Map<String, List> result = new HashMap<>();
         result.put("result", contracts);
         return result;
@@ -152,7 +156,6 @@ public class OperatorController {
         contract.setBegin_time(date.next().toString());
         contract.setEnd_time(date.next().toString());
         if (contractService.updateContract(contract) == 1) {
-            logger.info("定稿合同成功");
             State s = new State();
             s.setCon_name(contract.getName());
             s.setTime(logService.currentDate());
@@ -161,12 +164,16 @@ public class OperatorController {
 
             Log log = new Log();
             log.setUser_name(contract.getUser_name());
-            log.setContent("定稿了一个合同：" + contract.getName());
+            log.setContent(u.getName() + " 定稿了一个合同：" + contract.getName());
             log.setTime(s.getTime());
             logService.log(log);
 
+            logger.info("定稿合同成功");
             return "Finalize success";
-        } else return "Finalize failure";
+        } else {
+            logger.info("定稿合同失败");
+            return "Finalize failure";
+        }
     }
     
     //获取当前用户的待审批列表
@@ -175,6 +182,7 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(6)) throw new Exception("Hasn't right");
 
+        logger.info("获取待审批列表");
         Map<String, List> result = new HashMap<>();
         result.put("result", processService.selectProcessByUserAndType(u.getName(), 2));
         return result;
@@ -197,7 +205,6 @@ public class OperatorController {
         process.setTime(logService.currentDate());
 
         if (processService.updateProcess(process) == 1) {
-            logger.info("审批合同成功");
             if (processService.isProcessFinish(process.getCon_name(), 2)) {
                 State s = new State();
                 s.setCon_name(process.getCon_name());
@@ -208,12 +215,14 @@ public class OperatorController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent("审批了一个合同：" + process.getCon_name());
+            log.setContent(u.getName() + " 审批了一个合同：" + process.getCon_name());
             log.setTime(logService.currentDate());
             logService.log(log);
 
+            logger.info("审批合同成功");
             return "Audit success";
         } else {
+            logger.info("审批合同失败");
             return "Audit failure";
         }
     }
@@ -224,6 +233,7 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(7)) throw new Exception("Hasn't right");
 
+        logger.info("获取待定稿列表");
         Map<String, List> result = new HashMap<>();
         result.put("result", processService.selectProcessByUserAndType(u.getName(), 3));
         return result;
@@ -246,7 +256,6 @@ public class OperatorController {
         process.setTime(logService.currentDate());
 
         if (processService.updateProcess(process) == 1) {
-            logger.info("签订合同成功");
             if (processService.isProcessFinish(process.getCon_name(), 3)) {
                 State s = new State();
                 s.setCon_name(process.getCon_name());
@@ -257,12 +266,14 @@ public class OperatorController {
 
             Log log = new Log();
             log.setUser_name(u.getName());
-            log.setContent("签订了一个合同：" + process.getCon_name());
+            log.setContent(u.getName() + " 签订了一个合同：" + process.getCon_name());
             log.setTime(logService.currentDate());
             logService.log(log);
 
+            logger.info("签订合同成功");
             return "Sign success";
         } else {
+            logger.info("签订合同失败");
             return "Sign failure";
         }
     }
@@ -273,6 +284,7 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(1)) throw new Exception("Hasn't right");
 
+        logger.info("查询用户起草的合同");
         List<Contract> cs = contractService.selectByUser(u.getName());
         Map<String, List> result = new HashMap<>();
         result.put("result", cs);
@@ -285,6 +297,7 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(3)) throw new Exception("Hasn't right");
 
+        logger.info("查询所有合同");
         Map<String, List> result = new HashMap<>();
         result.put("result", contractService.selectAll());
         return result;
@@ -296,6 +309,7 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(3)) throw new Exception("Hasn't right");
 
+        logger.info("查询合同信息");
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String con_name = rootNode.findValue("name").asText();
@@ -311,7 +325,10 @@ public class OperatorController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String con_name = rootNode.findValue("name").asText();
-        return stateService.selectState(con_name);
+
+        State s = stateService.selectState(con_name);
+        logger.info("查询合同状态");
+        return s;
     }
 
     //获取合同的操作过程
@@ -323,6 +340,8 @@ public class OperatorController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(params);
         String con_name = rootNode.findValue("name").asText();
+
+        logger.info("查询合同流程");
         Map<String, List> result = new HashMap<>();
         result.put("result", processService.selectProcess(con_name));
         return result;
@@ -343,10 +362,11 @@ public class OperatorController {
 
         Log log = new Log();
         log.setUser_name(u.getName());
-        log.setContent(u.getName() + "删除了一个合同：" + con_name);
+        log.setContent(u.getName() + " 删除了一个合同：" + con_name);
         log.setTime(logService.currentDate());
         logService.log(log);
 
+        logger.info("删除合同成功");
         return "Delete success";
     }
 }
