@@ -95,7 +95,7 @@ public class OperatorController {
         process.setTime(logService.currentDate());
 
         if (processService.updateProcess(process) == 1) {
-            if (processService.isProcessFinish(process.getCon_name(), process.getType())) {
+            if (processService.isProcessFinish(process.getCon_name(), 1)) {
                 State s = new State();
                 s.setCon_name(process.getCon_name());
                 s.setType(2);
@@ -149,7 +149,7 @@ public class OperatorController {
         Contract contract = new Contract();
         contract.setName(rootNode.findValue("name").asText());
         contract.setUser_name(u.getName());
-        contract.setCustomer_name(rootNode.findValue("user_name").asText());
+        contract.setCustomer_name(rootNode.findValue("customer_name").asText());
         contract.setContent(rootNode.findValue("content").asText());
 
         Iterator<JsonNode> date = rootNode.findValue("date").elements();
@@ -182,9 +182,17 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(6)) throw new Exception("Hasn't right");
 
+        List<Processes> ps = processService.selectProcessByUserAndType(u.getName(), 2);
+        List<Processes> pps = new ArrayList<>();
+        for (Processes p : ps) {
+            if (stateService.selectState(p.getCon_name()).getType() == 3) {
+                pps.add(p);
+            }
+        }
+
         logger.info("获取待审批列表");
         Map<String, List> result = new HashMap<>();
-        result.put("result", processService.selectProcessByUserAndType(u.getName(), 2));
+        result.put("result", pps);
         return result;
     }
 
@@ -205,19 +213,29 @@ public class OperatorController {
         process.setTime(logService.currentDate());
 
         if (processService.updateProcess(process) == 1) {
-            if (processService.isProcessFinish(process.getCon_name(), 2)) {
+            if (process.getState() == 1) {
+                if (processService.isProcessFinish(process.getCon_name(), 2)) {
+                    State s = new State();
+                    s.setCon_name(process.getCon_name());
+                    s.setType(4);
+                    s.setTime(process.getTime());
+                    stateService.updateState(s);
+                }
+
+                Log log = new Log();
+                log.setUser_name(u.getName());
+                log.setContent(u.getName() + " 审批了一个合同：" + process.getCon_name());
+                log.setTime(logService.currentDate());
+                logService.log(log);
+            } else {
                 State s = new State();
                 s.setCon_name(process.getCon_name());
-                s.setType(4);
+                s.setType(2);
                 s.setTime(process.getTime());
                 stateService.updateState(s);
+                process.setState(0);
+                processService.updateProcess(process);
             }
-
-            Log log = new Log();
-            log.setUser_name(u.getName());
-            log.setContent(u.getName() + " 审批了一个合同：" + process.getCon_name());
-            log.setTime(logService.currentDate());
-            logService.log(log);
 
             logger.info("审批合同成功");
             return "Audit success";
@@ -233,9 +251,17 @@ public class OperatorController {
         User u = (User)session.getAttribute("login");
         if (!u.hasRight(7)) throw new Exception("Hasn't right");
 
+        List<Processes> ps = processService.selectProcessByUserAndType(u.getName(), 3);
+        List<Processes> pps = new ArrayList<>();
+        for (Processes p : ps) {
+            if (stateService.selectState(p.getCon_name()).getType() == 4) {
+                pps.add(p);
+            }
+        }
+
         logger.info("获取待定稿列表");
         Map<String, List> result = new HashMap<>();
-        result.put("result", processService.selectProcessByUserAndType(u.getName(), 3));
+        result.put("result", pps);
         return result;
     }
 

@@ -42,12 +42,12 @@
 
     <update id="updateProcess" parameterType="com.zhang.contract.entity.Processes">
         update "CONTRACT_PROCESS"
-        set TYPE    = #{type},
-            STATE   = #{state},
+        set STATE   = #{state},
             CONTENT = #{content},
             TIME    = #{time}
         where CON_NAME = #{con_name}
           and USER_NAME = #{user_name}
+          and TYPE = #{type}
     </update>
 
     <delete id="deleteProcess">
